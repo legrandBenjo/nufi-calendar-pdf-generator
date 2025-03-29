@@ -1,0 +1,39 @@
+{
+  "name": "nufi-calendar-pdf-generator",
+  "homepage": "https://legrandbenjo.github.io/nufi-calendar-pdf-generator/",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@react-pdf/renderer": "^4.3.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-scripts": "5.0.1",
+     "gh-pages": "^6.3.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "predeploy": "PUBLIC_URL=. npm run build",
+    "deploy": "gh-pages -d build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
