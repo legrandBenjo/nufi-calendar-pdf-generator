@@ -26,5 +26,4 @@ const CSVUploader = ({ onFileLoaded }) => {
   );
 };
 
-// Export par défaut crucial
 export default CSVUploader;

@@ -14,7 +14,7 @@ Font.register({
   ],
 });
 
-// Correspondance des mois
+// Correspondance des mois pour Nufi
 const MONTHS = {
   'January': 'Ngù\'fī',
   'February': 'Nkùɑ̀nʉ̀ɑ̀',
@@ -30,23 +30,37 @@ const MONTHS = {
   'December': 'Ncátmɑ̄ŋū'
 };
 
+
 // Création des styles
 const styles = StyleSheet.create({
   page: {
     padding: 40,
     fontFamily: 'NotoSans',
   },
-  header: {
-    marginBottom: 20,
+  yearTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
     textAlign: 'center',
+    marginBottom: 20,
+    color: '#2c3e50'
   },
-  title: {
-    fontSize: 24,
+  monthPage: {
+    padding: 40,
+    fontFamily: 'NotoSans',
+  },
+  monthTitle: {
+    fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 10,
+    color: '#2c3e50',
+    borderBottomWidth: 1,
+    borderBottomColor: '#e0e0e0',
+    paddingBottom: 5,
+    textAlign: 'center'
   },
   table: {
     width: '100%',
+    marginTop: 10,
     borderStyle: 'solid',
     borderWidth: 1,
     borderColor: '#d3d3d3',
@@ -68,65 +82,63 @@ const styles = StyleSheet.create({
     borderRightWidth: 1,
     borderRightColor: '#d3d3d3',
   },
-  nufiText: {
-    fontFamily: 'NotoSans',
-    color: '#2c3e50',
-  },
-  monthContainer: {
-    marginBottom: 30,
-    pageBreakAfter: 'auto'
-  },
-  monthTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 10,
-    color: '#2c3e50',
-    borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
-    paddingBottom: 5
-  },
 });
 
-const groupByMonth = (data) => {
-  return data.reduce((acc, item) => {
-    const month = item.date.split(' ')[0]; // Extrait le mois (ex: "January")
-    if (!acc[month]) {
-      acc[month] = [];
-    }
+const NufiCalendarPDF = ({ data }) => {
+  if (!data || data.length === 0) {
+    return (
+      <Document>
+        <Page size="A4">
+          <Text>Aucune donnée à afficher</Text>
+        </Page>
+      </Document>
+    );
+  }
+
+  const currentYear = data[0]?.year || '';
+  const monthsData = data.reduce((acc, item) => {
+    const month = item.date.split(' ')[0];
+    if (!acc[month]) acc[month] = [];
     acc[month].push(item);
     return acc;
   }, {});
-};
-
-
-const NufiCalendarPDF = ({ data }) => {
-  const dataByMonth = groupByMonth(data);
 
   return (
     <Document>
-      {Object.entries(dataByMonth).map(([month, monthData]) => (
-        <Page key={month} size="A4" style={styles.page} wrap={false} >
-          <View style={styles.monthContainer}>
+      {/* Page de titre */}
+      <Page size="A4" style={styles.page}>
+        <Text style={styles.yearTitle}>
+          Calendrier Nufi {currentYear}
+        </Text>
+      </Page>
+
+      {/* Pages des mois */}
+      {Object.entries(monthsData).map(([month, monthData]) => (
+        <Page 
+          key={month} 
+          size="A4" 
+          style={styles.monthPage}
+          wrap={false} // Empêche le découpage sur plusieurs pages
+        >
+          <View>
             <Text style={styles.monthTitle}>
-              {MONTHS[month]} / {month} 2026
+              {MONTHS[month] || month} {currentYear}
             </Text>
             
             <View style={styles.table}>
-              {/* En-têtes */}
               <View style={[styles.tableRow, styles.tableHeader]}>
                 <Text style={styles.tableCell}>Date</Text>
                 <Text style={styles.tableCell}>Jour (Anglais)</Text>
                 <Text style={styles.tableCell}>Jour (Nufi)</Text>
-                <Text style={styles.tableCell}>Date complète (Nufi)</Text>
+                <Text style={[styles.tableCell, { flex: 2 }]}>Date complète (Nufi)</Text>
               </View>
               
-              {/* Données du mois */}
               {monthData.map((item, index) => (
                 <View key={index} style={styles.tableRow}>
                   <Text style={styles.tableCell}>{item.date}</Text>
                   <Text style={styles.tableCell}>{item.dayEng}</Text>
                   <Text style={styles.tableCell}>{item.dayNufi}</Text>
-                  <Text style={styles.tableCell}>{item.fullDateNufi}</Text>
+                  <Text style={[styles.tableCell, { flex: 2 }]}>{item.fullDateNufi}</Text>
                 </View>
               ))}
             </View>
