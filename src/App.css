@@ -61,3 +61,7 @@ th {
   font-size: 16px;
   margin-left: 10px;
 }
+
+.year-selector select:hover {
+  border-color: #aaa;
+}

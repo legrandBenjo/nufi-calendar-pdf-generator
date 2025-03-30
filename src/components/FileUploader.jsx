@@ -1,10 +1,11 @@
+// FileUploader.jsx
 import React from 'react';
-import CSVUploader from './CSVUploader'; // Chemin relatif corrigé
+import CSVUploader from './CSVUploader';
 import { parseCSVData } from '../utils/csvParser';
 
-const FileUploader = ({ setCalendarData }) => {
-  const handleFileLoaded = (data) => {
-    const formattedData = parseCSVData(data);
+const FileUploader = ({ setCalendarData, calendarType = 'nufi' }) => {
+  const handleFileLoaded = (csvData) => {
+    const formattedData = parseCSVData(csvData, calendarType);
     setCalendarData(formattedData);
   };
 

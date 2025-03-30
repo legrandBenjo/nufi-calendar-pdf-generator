@@ -1,6 +1,7 @@
+// CSVUploader.jsx
 import React from 'react';
 
-const CSVUploader = ({ onFileLoaded }) => {
+const CSVUploader = ({ onFileLoaded, acceptedFormats = '.csv' }) => {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -8,8 +9,7 @@ const CSVUploader = ({ onFileLoaded }) => {
     const reader = new FileReader();
     reader.onload = (event) => {
       const csvData = event.target.result;
-      const rows = csvData.split('\n').map(row => row.split(','));
-      onFileLoaded(rows);
+      onFileLoaded(csvData);
     };
     reader.readAsText(file);
   };
@@ -18,7 +18,7 @@ const CSVUploader = ({ onFileLoaded }) => {
     <div>
       <input
         type="file"
-        accept=".csv"
+        accept={acceptedFormats}
         onChange={handleFileChange}
         style={{ display: 'block', margin: '10px 0' }}
       />
