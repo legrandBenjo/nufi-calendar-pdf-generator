@@ -1,67 +1,94 @@
+/* Styles de base */
 .app-container {
+  padding: 2rem;
   max-width: 800px;
   margin: 0 auto;
-  padding: 20px;
-  font-family: Arial, sans-serif;
+  background-color: #f8f9fa;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.file-uploader {
-  margin: 20px 0;
-  padding: 20px;
-  border: 2px dashed #ccc;
-  border-radius: 5px;
+.app-title {
+  color: #2c3e50;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+/* Groupes de contrôle */
+.control-group {
+  margin-bottom: 1.5rem;
+  background-color: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.control-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #34495e;
+  font-weight: 500;
+}
+
+.language-select {
+  padding: 0.5rem;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  width: 100%;
+  font-size: 1rem;
+}
+
+/* Styles pour l'info fichier */
+.file-info {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  padding: 0.5rem;
+  border-radius: 4px;
   text-align: center;
 }
 
-.calendar-preview {
-  margin: 20px 0;
+.default-file {
+  background-color: #e8f5e9;
+  color: #2e7d32;
 }
 
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 10px;
+.custom-file {
+  background-color: #e3f2fd;
+  color: #1565c0;
 }
 
-th, td {
-  border: 1px solid #ddd;
-  padding: 8px;
-  text-align: left;
-}
-
-th {
-  background-color: #f2f2f2;
-}
-
-.pdf-generator-btn {
-  background-color: #4CAF50;
+/* Bouton de téléchargement */
+.download-button {
+  padding: 0.75rem 1.5rem;
+  background: #4a6fa5;
   color: white;
-  padding: 10px 20px;
+  text-decoration: none;
+  border-radius: 4px;
+  display: inline-block;
+  margin-top: 1rem;
+  font-weight: 500;
+  transition: background 0.3s ease;
   border: none;
-  border-radius: 4px;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 1rem;
 }
 
-.pdf-generator-btn:hover {
-  background-color: #45a049;
+.download-button:hover {
+  background: #3a5a80;
 }
 
-.year-selector {
-  margin: 20px 0;
-  padding: 15px;
-  background-color: #f5f5f5;
-  border-radius: 5px;
+/* États */
+.loading-text {
+  color: #7f8c8d;
+  text-align: center;
+  font-style: italic;
 }
 
-.year-selector select {
-  padding: 8px 12px;
-  border-radius: 4px;
-  border: 1px solid #ddd;
-  font-size: 16px;
-  margin-left: 10px;
-}
-
-.year-selector select:hover {
-  border-color: #aaa;
+.no-data-text {
+  color: #e74c3c;
+  text-align: center;
 }

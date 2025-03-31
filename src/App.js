@@ -1,47 +1,95 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { PDFDownloadLink } from '@react-pdf/renderer';
-import FileUploader from './components/FileUploader';
 import NufiCalendarPDF from '../src/components/PDF/NufiCalendarPDF';
 import YearSelector from './components/YearSelector';
+import CSVUploader from './components/CSVUploader';
+import { parseCSVData } from './utils/csvParser';
 import './App.css';
+
+// Chemins vers les fichiers CSV
+const CSV_PATHS = {
+  nufi: process.env.PUBLIC_URL + '/data/Nufi_calendar_calendrier_history_1900_2200.csv',
+  ghomala: process.env.PUBLIC_URL + '/data/Ghomala_calendar_calendrier_history_1900_2200.csv'
+};
 
 function App() {
   const [calendarData, setCalendarData] = useState([]);
   const [calendarType, setCalendarType] = useState('nufi');
   const [selectedYear, setSelectedYear] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [useDefaultFile, setUseDefaultFile] = useState(true);
 
-  const handleDataLoaded = (data) => {
-    setCalendarData(data);
-    if (data.length > 0) {
-      const years = [...new Set(data.map(item => item.year))].sort();
+  // Chargement automatique du CSV par défaut
+  useEffect(() => {
+    if (useDefaultFile) {
+      loadDefaultCSV();
+    }
+  }, [calendarType, useDefaultFile]);
+
+  const loadDefaultCSV = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch(CSV_PATHS[calendarType]);
+      const csvText = await response.text();
+      processCSVData(csvText);
+    } catch (error) {
+      console.error("Erreur de chargement du CSV:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleFileUpload = (csvText) => {
+    setUseDefaultFile(false);
+    processCSVData(csvText);
+  };
+
+  const processCSVData = (csvText) => {
+    const parsedData = parseCSVData(csvText, calendarType);
+    setCalendarData(parsedData);
+    
+    if (parsedData.length > 0) {
+      const years = [...new Set(parsedData.map(item => item.year))].sort();
       setSelectedYear(years[years.length - 1]);
     }
+  };
+
+  const handleLanguageChange = (e) => {
+    setCalendarType(e.target.value);
+    setUseDefaultFile(true);
   };
 
   const filteredData = calendarData.filter(item => item.year === selectedYear);
 
   return (
-    <div style={{ padding: 20, maxWidth: 800, margin: '0 auto' }}>
-      <h1>Générateur de Calendrier</h1>
+    <div className="app-container">
+      <h1 className="app-title">Générateur de Calendrier</h1>
       
-      <div style={{ marginBottom: 20 }}>
-        <label style={{ marginRight: 10 }}>Langue : </label>
+      <div className="control-group">
+        <label className="control-label">Langue :</label>
         <select 
           value={calendarType}
-          onChange={(e) => setCalendarType(e.target.value)}
-          style={{ padding: 8 }}
+          onChange={handleLanguageChange}
+          className="language-select"
+          disabled={isLoading}
         >
           <option value="nufi">Nufi</option>
           <option value="ghomala">Ghomala</option>
         </select>
       </div>
 
-      <FileUploader 
-        setCalendarData={handleDataLoaded}
-        calendarType={calendarType}
-      />
+      <div className="control-group">
+        <CSVUploader onFileLoaded={handleFileUpload} acceptedFormats=".csv" />
+        <small className={`file-info ${useDefaultFile ? 'default-file' : 'custom-file'}`}>
+          {useDefaultFile ? 
+            `Utilisation du fichier ${calendarType} par défaut` : 
+            'Utilisation du fichier personnalisé'}
+        </small>
+      </div>
 
-      {calendarData.length > 0 && (
+      {isLoading ? (
+        <p>Chargement en cours...</p>
+      ) : calendarData.length > 0 ? (
         <>
           <YearSelector
             years={[...new Set(calendarData.map(item => item.year))].sort()}
@@ -67,6 +115,8 @@ function App() {
             </PDFDownloadLink>
           </div>
         </>
+      ) : (
+        <p>Aucune donnée disponible. Veuillez charger un fichier CSV.</p>
       )}
     </div>
   );
