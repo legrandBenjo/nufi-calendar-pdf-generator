@@ -92,3 +92,10 @@
   color: #e74c3c;
   text-align: center;
 }
+
+.blocktext {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  font-size: small;
+}

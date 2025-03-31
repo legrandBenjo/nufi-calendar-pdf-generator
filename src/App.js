@@ -118,6 +118,7 @@ function App() {
       ) : (
         <p>Aucune donnée disponible. Veuillez charger un fichier CSV.</p>
       )}
+      <div className="blocktext">© Resulam 2025</div>
     </div>
   );
 }
