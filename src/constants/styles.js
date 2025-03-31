@@ -105,5 +105,69 @@ export const styles = StyleSheet.create({
   weekRow: {
     flexDirection: 'row',
     width: '100%'
+  },
+  firstPageContainer: {
+    padding: 40,
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    height: '100%'
+  },
+
+  aboutSection: {
+    marginTop: 30,
+    padding: 20,
+    backgroundColor: '#f9f9f9',
+    border: `1pt solid ${COLORS.light}`,
+    borderRadius: 8,
+    flexGrow: 1
+  },
+
+  aboutTitle: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    marginBottom: 12,
+    color: COLORS.primary,
+    borderBottom: `1pt solid ${COLORS.secondary}`,
+    paddingBottom: 4
+  },
+
+  aboutText: {
+    fontSize: 10,
+    marginBottom: 8,
+    lineHeight: 1.5,
+    textAlign: 'left',
+    color: COLORS.dark
+  },
+
+  linksContainer: {
+    marginTop: 15,
+    marginBottom: 10,
+    padding: 10,
+    backgroundColor: '#fff',
+    borderRadius: 4,
+    borderLeft: `3pt solid ${COLORS.accent}`
+  },
+
+  link: {
+    color: COLORS.accent,
+    textDecoration: 'none',
+    marginLeft: 5,
+    fontWeight: 'bold'
+  },
+
+  signature: {
+    marginTop: 15,
+    fontStyle: 'italic',
+    fontSize: 9,
+    color: COLORS.text,
+    textAlign: 'right'
+  },
+  logo: {
+    width: 80,
+    maxHeight: 60,
+    margin: '0 auto 20 auto',
+    opacity: 0.9,
+    alignSelf: 'center'
   }
 });
