@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import FileUploader from './components/FileUploader';
-import NufiCalendarPDF from './components/PDF/NufiCalendarPDF';
+import NufiCalendarPDF from '../src/components/PDF/NufiCalendarPDF';
 import YearSelector from './components/YearSelector';
 import './App.css';
 
