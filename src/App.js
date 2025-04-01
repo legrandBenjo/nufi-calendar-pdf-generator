@@ -18,6 +18,8 @@ function App() {
   const [selectedYear, setSelectedYear] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [useDefaultFile, setUseDefaultFile] = useState(true);
+  const currentYear = new Date().getFullYear().toString();
+  
 
   // Chargement automatique du CSV par défaut
   useEffect(() => {
@@ -48,9 +50,12 @@ function App() {
     const parsedData = parseCSVData(csvText, calendarType);
     setCalendarData(parsedData);
     
+    
     if (parsedData.length > 0) {
       const years = [...new Set(parsedData.map(item => item.year))].sort();
-      setSelectedYear(years[years.length - 1]);
+
+      // Sélectionne l'année courante si disponible, sinon la dernière année
+      setSelectedYear(years.includes(currentYear) ? currentYear : years[years.length - 1]);
     }
   };
 
@@ -79,7 +84,7 @@ function App() {
       </div>
 
       <div className="control-group">
-        <CSVUploader onFileLoaded={handleFileUpload} acceptedFormats=".csv" />
+        <CSVUploader onFileLoaded={handleFileUpload} acceptedFormats=".csv,.xlsx,.xls" />
         <small className={`file-info ${useDefaultFile ? 'default-file' : 'custom-file'}`}>
           {useDefaultFile ? 
             `Utilisation du fichier ${calendarType} par défaut` : 
@@ -118,7 +123,7 @@ function App() {
       ) : (
         <p>Aucune donnée disponible. Veuillez charger un fichier CSV.</p>
       )}
-      <div className="blocktext">© Resulam 2025</div>
+      <div className="blocktext">© Resulam {currentYear}</div>
     </div>
   );
 }

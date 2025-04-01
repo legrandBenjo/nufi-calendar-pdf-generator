@@ -140,22 +140,68 @@ export const styles = StyleSheet.create({
     color: COLORS.dark
   },
 
+  // Conteneur principal pour tous les liens
   linksContainer: {
     marginTop: 15,
     marginBottom: 10,
+  },
+
+  // Style pour chaque bloc de lien (github, contact)
+  linkBlock: {
+    marginBottom: 12,
     padding: 10,
     backgroundColor: '#fff',
     borderRadius: 4,
     borderLeft: `3pt solid ${COLORS.accent}`
   },
 
+  // Style spécifique pour les liens GitHub (conteneur du tableau)
+  githubLinksContainer: {
+    marginBottom: 8,
+  },
+
+  // Style pour chaque élément GitHub dans le tableau
+  githubLinkItem: {
+    marginBottom: 6,
+  },
+
+  // Style pour le texte descriptif du lien
+  linkText: {
+    fontSize: 9,
+    marginBottom: 4,
+    lineHeight: 1.4,
+    color: COLORS.dark
+  },
+
+  // Style pour le lien lui-même
   link: {
     color: COLORS.accent,
     textDecoration: 'none',
-    marginLeft: 5,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    fontSize: 9,
   },
 
+  // Style pour le label du lien
+  linkLabel: {
+    fontWeight: 'bold',
+    color: COLORS.primary,
+    fontSize: 9,
+  },
+
+  linkBlockTitle: {
+    fontSize: 10,
+    fontWeight: 'bold',
+    marginBottom: 6,
+    color: COLORS.primary,
+  },
+  
+  linkContent: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    marginTop: 2,
+  },
+  
   signature: {
     marginTop: 15,
     fontStyle: 'italic',
@@ -163,6 +209,7 @@ export const styles = StyleSheet.create({
     color: COLORS.text,
     textAlign: 'right'
   },
+  
   logo: {
     width: 80,
     maxHeight: 60,

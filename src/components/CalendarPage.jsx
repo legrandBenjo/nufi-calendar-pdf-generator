@@ -7,31 +7,39 @@ const CalendarPage = ({ data }) => {
   const currentYear = data[0]?.year || '';
   const calendarType = data[0]?.calendarType || 'nufi';
   
-  // Organiser les données par mois
+  // Organiser les données par mois (optimisé)
   const monthsData = data.reduce((acc, item) => {
     const month = item.date.split(' ')[0];
-    if (!acc[month]) acc[month] = [];
+    acc[month] = acc[month] || [];
     acc[month].push(item);
     return acc;
   }, {});
 
+  // Date de génération formatée
+  const generationDate = new Date().toLocaleDateString('fr-FR', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+
   return (
     <>
+      {/* Première page avec informations */}
       <Page size="A4" style={styles.page}>
         <View style={styles.firstPageContainer}>
-        <Image 
-          src={`${process.env.PUBLIC_URL}/logo512.png`} 
-          style={styles.logo}
-          alt="Logo Resulam"
-        />
-          {/* Titre principal */}
+          <Image 
+            src={`${process.env.PUBLIC_URL}/logo512.png`} 
+            style={styles.logo}
+            alt="Logo Resulam"
+          />
+          
           <View>
             <Text style={styles.yearTitle}>
               Calendrier {calendarType.toUpperCase()} {currentYear}
             </Text>
           </View>
           
-          {/* Section À propos */}
+          {/* Section À propos améliorée */}
           <View style={styles.aboutSection}>
             <Text style={styles.aboutTitle}>{aboutContent.title}</Text>
             
@@ -42,36 +50,44 @@ const CalendarPage = ({ data }) => {
             ))}
             
             <View style={styles.linksContainer}>
-              <Text style={styles.aboutText}>{aboutContent.links.github.text}</Text>
-              <Link 
-                src={aboutContent.links.github.url} 
-                style={styles.link}
-              >
-                {aboutContent.links.github.label}
-              </Link>
-            </View>
-            
-            <View style={styles.linksContainer}>
-              <Text style={styles.aboutText}>
-                {aboutContent.links.contact.text}
+              {/* Section GitHub améliorée */}
+              <View style={styles.linkBlock}>
+                <Text style={styles.linkBlockTitle}>Liens utiles :</Text>
+                {aboutContent.links.github.map((githubLink, index) => (
+                  <View key={`github-${index}`} style={styles.githubLinkItem}>
+                    <Text style={styles.linkText}>{githubLink.text}</Text>
+                    <View style={styles.linkContent}>
+                      <Text style={styles.linkLabel}>{githubLink.label} : </Text>
+                      <Link src={githubLink.url} style={styles.link}>
+                        {githubLink.url}
+                      </Link>
+                    </View>
+                  </View>
+                ))}
+              </View>
+              
+              {/* Section Contact */}
+              <View style={styles.linkBlock}>
+                <Text style={styles.linkText}>{aboutContent.links.contact.text}</Text>
                 <Link 
                   src={`mailto:${aboutContent.links.contact.email}`} 
                   style={styles.link}
                 >
                   {aboutContent.links.contact.email}
                 </Link>
-              </Text>
+              </View>
             </View>
 
             <Text style={styles.signature}>
-              Généré le {new Date().toLocaleDateString('fr-FR')}
+              Généré le {generationDate}
             </Text>
           </View>
         </View>
       </Page>
 
+      {/* Pages des mois */}
       {Object.entries(monthsData).map(([month, monthData]) => (
-        <Page key={month} size="A4" style={styles.page}>
+        <Page key={`month-${month}`} size="A4" style={styles.page}>
           <MonthGrid 
             month={month} 
             monthData={monthData} 
