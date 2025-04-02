@@ -5,11 +5,11 @@ Font.register({
     family: 'NotoSans',
     fonts: [
       { 
-        src: `${process.env.PUBLIC_URL}/fonts/NotoSans-Regular.ttf`,
+        src: `${process.env.PUBLIC_URL}/fonts/CharisSILR.ttf`,
         fontWeight: 400
       },
       { 
-        src: `${process.env.PUBLIC_URL}/fonts/NotoSans-Bold.ttf`, 
+        src: `${process.env.PUBLIC_URL}/fonts/CharisSILB.ttf`, 
         fontWeight: 700 
       },
       { 
