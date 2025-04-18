@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { PDFDownloadLink } from '@react-pdf/renderer';
-import NufiCalendarPDF from '../src/components/PDF/NufiCalendarPDF';
+import CalendarPDF from '../src/components/PDF/CalendarPDF';
 import YearSelector from './components/YearSelector';
 import CSVUploader from './components/CSVUploader';
 import { parseCSVData } from './utils/csvParser';
@@ -68,7 +68,7 @@ function App() {
 
   return (
     <div className="app-container">
-      <h1 className="app-title">Générateur de Calendrier</h1>
+      <h1 className="app-title">Générateur de Calendrier PDF</h1>
       
       <div className="control-group">
         <label className="control-label">Langue :</label>
@@ -104,7 +104,7 @@ function App() {
 
           <div style={{ marginTop: 20 }}>
             <PDFDownloadLink
-              document={<NufiCalendarPDF data={filteredData} />}
+              document={<CalendarPDF data={filteredData} />}
               fileName={`calendrier_${calendarType}_${selectedYear}.pdf`}
               style={{
                 padding: '10px 15px',

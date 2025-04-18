@@ -3,7 +3,7 @@ import { Font } from '../../utils/fontSetup';
 import CalendarPage from '../CalendarPage';
 import { styles } from '../../constants/styles';
 
-const NufiCalendarPDF = ({ data }) => {
+const CalendarPDF = ({ data }) => {
   if (!data || data.length === 0) {
     return (
       <Document>
@@ -21,4 +21,4 @@ const NufiCalendarPDF = ({ data }) => {
   );
 };
 
-export default NufiCalendarPDF;
+export default CalendarPDF;
