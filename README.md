@@ -1,70 +1,43 @@
-# Getting Started with Create React App
+# Comment compiler et exécuter ce calendrier en local
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+0. Vous devez disposer de NPM et de Node.JS pour exécuter vos commandes. Voir: https://docs.npmjs.com/downloading-and-installing-node-js-and-npm
+1. Commencer par cloner le code source à l'adresse suivante: https://github.com/legrandBenjo/nufi-calendar-pdf-generator.git
+2. Exécuter ensuite le script suivant à la racine du projet pour installer toutes les dépendances nécessaires:
 
-## Available Scripts
+## Installation des dépendances présentes dans le fichier package.json
 
 In the project directory, you can run:
 
+### `npm install`
+
+3. Si vous n'avez pas d'erreur, alors vous pouvez lancer le projet avec la commande suivante:
+
 ### `npm start`
 
-Runs the app in the development mode.\
+Voilà, votre projet est prêt et vous pouvez y accéder à l'adresse suivante:
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
 The page will reload when you make changes.\
 You may also see any lint errors in the console.
 
-### `npm test`
+# Comment ajouter une nouvelle langue dans la liste (exemple: Duala, Bassa, Medumba etc..)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Imaginons que vous souhaitez ajouter une nouvelle langue dans la drop-down list pour obtenir son calendrier sous format PDF.
+Vous devez d'abord avoir ce calendrier en CSV pour pouvoir l'importer dans l'application.
 
-### `npm run build`
+## Obtenir le calendrier en CSV
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Clonez le projet suivant: https://github.com/tchamna/Bamileke/blob/main/CalendrierBamilekeCalendarNufi.ipynb
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Modifiez et adaptez-le pour pouvoir produire en sortie le calendrier en langue choisie sous format CSV.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+**Note: N'hésitez pas à contacter Resulam pour du support à l'adresse suivante: contact@resulam.com**
 
-### `npm run eject`
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## Obtenir le calendrier en PDF
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Une fois que vous avez un calendrier sous format CSV, vous pouvez maintenant utiliser ce projet calendargenerator pour l'obtenir sous format PDF.
+Pour celà, repartir du point 1 ci-dessus et adapter le code en conséquence.
+Le fichier comportant le calendrier en CSV doit être présent dans le dossier public/data.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+**Note: N'hésitez pas à contacter Resulam pour du support à l'adresse suivante: contact@resulam.com**
