@@ -1,5 +1,4 @@
 import { Document, Page, Text } from '@react-pdf/renderer';
-import { Font } from '../../utils/fontSetup';
 import CalendarPage from '../CalendarPage';
 import { styles } from '../../constants/styles';
 

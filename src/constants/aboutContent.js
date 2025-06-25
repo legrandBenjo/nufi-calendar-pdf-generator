@@ -2,7 +2,7 @@ export const aboutContent = {
   title: "À propos de cette application",
   paragraphs: [
     "Cette application a été développée par Keudjo Benjamin et Shck Tchamna pour Resulam.",
-    "Les données utilisées proviennent d'un script Python conçu par Shck Ca᷅mnà' (Tchamna), qui génère les jours de la semaine en langue choisie (Exemple le Fe'efe'e ou le Ghomala), couvrant la période du 1er janvier 1900 au 31 décembre 2200. Grâce à ce fichier, il est également possible d'étendre le calendrier indéfiniment.",
+    "Les données utilisées proviennent d'un script Python conçu par Shck Ca᷅mnà' (Tchamna), qui génère les jours de la semaine en langue choisie (comme le Fe'efe'e ou le Ghomala), couvrant la période du 1er janvier 1900 au 31 décembre 2200. Grâce à ce fichier, il est également possible d'étendre le calendrier indéfiniment.",
     "Vous êtes libre d'utiliser cet outil afin de générer le calendrier dans votre propre langue."
   ],
   links: {

@@ -1,0 +1,16 @@
+include:
+  - local: 'scripts/.gitlab-ci.react.template.yml'
+
+variables:
+  NODE_ENV: development  # 👈 Important pour installer devDependencies comme react-app-rewired
+  DEPLOY_TYPE: gh-pages  # remplacer "gh-pages" par "ssh" si vous souhaitez déployer sur le serveur de Resulam
+
+  # SSH pour prod
+  SSH_USER: deploy
+  SSH_HOST: calendargenerator.resulam.com
+  SSH_PORT: 22
+  DEPLOY_DIR: /var/www/html/calendargenerator
+
+  # GitHub Pages
+  DEPLOY_HOST: legrandbenjo.github.io
+  DEPLOY_PATH: /nufi-calendar-pdf-generator

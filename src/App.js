@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import './utils/fontSetup';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import CalendarPDF from '../src/components/PDF/CalendarPDF';
 import YearSelector from './components/YearSelector';
@@ -12,6 +13,17 @@ const CSV_PATHS = {
   ghomala: process.env.PUBLIC_URL + '/data/Ghomala_calendar_calendrier_history_1900_2200.csv'
 };
 
+// Fonction déplacée en dehors du composant
+const processCSVData = (csvText, calendarType, setCalendarData, setSelectedYear, currentYear) => {
+  const parsedData = parseCSVData(csvText, calendarType);
+  setCalendarData(parsedData);
+
+  if (parsedData.length > 0) {
+    const years = [...new Set(parsedData.map(item => item.year))].sort();
+    setSelectedYear(years.includes(currentYear) ? currentYear : years[years.length - 1]);
+  }
+};
+
 function App() {
   const [calendarData, setCalendarData] = useState([]);
   const [calendarType, setCalendarType] = useState('nufi');
@@ -19,44 +31,29 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [useDefaultFile, setUseDefaultFile] = useState(true);
   const currentYear = new Date().getFullYear().toString();
-  
 
-  // Chargement automatique du CSV par défaut
-  useEffect(() => {
-    if (useDefaultFile) {
-      loadDefaultCSV();
-    }
-  }, [calendarType, useDefaultFile]);
-
-  const loadDefaultCSV = async () => {
+  const loadDefaultCSV = useCallback(async () => {
     setIsLoading(true);
     try {
       const response = await fetch(CSV_PATHS[calendarType]);
       const csvText = await response.text();
-      processCSVData(csvText);
+      processCSVData(csvText, calendarType, setCalendarData, setSelectedYear, currentYear);
     } catch (error) {
       console.error("Erreur de chargement du CSV:", error);
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [calendarType, currentYear]);
+
+  useEffect(() => {
+    if (useDefaultFile) {
+      loadDefaultCSV();
+    }
+  }, [calendarType, useDefaultFile, loadDefaultCSV]);
 
   const handleFileUpload = (csvText) => {
     setUseDefaultFile(false);
-    processCSVData(csvText);
-  };
-
-  const processCSVData = (csvText) => {
-    const parsedData = parseCSVData(csvText, calendarType);
-    setCalendarData(parsedData);
-    
-    
-    if (parsedData.length > 0) {
-      const years = [...new Set(parsedData.map(item => item.year))].sort();
-
-      // Sélectionne l'année courante si disponible, sinon la dernière année
-      setSelectedYear(years.includes(currentYear) ? currentYear : years[years.length - 1]);
-    }
+    processCSVData(csvText, calendarType, setCalendarData, setSelectedYear, currentYear);
   };
 
   const handleLanguageChange = (e) => {
@@ -68,7 +65,7 @@ function App() {
 
   return (
     <div className="app-container">
-      <h1 className="app-title">Générateur de Calendrier PDF</h1>
+      <h1 className="app-title">Générateur de Calendrier en PDF</h1>
       
       <div className="control-group">
         <label className="control-label">Langue :</label>

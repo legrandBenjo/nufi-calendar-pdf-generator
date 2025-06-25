@@ -1,0 +1,77 @@
+image: node:20
+
+stages:
+  - install
+  - lint
+  - build
+  - deploy
+
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - node_modules/
+
+variables:
+  NODE_ENV: production
+  DEPLOY_TYPE: ssh  # ou gh-pages
+
+before_script:
+  - echo "🌍 Initialisation de l’environnement"
+
+install:
+  stage: install
+  script:
+    - echo "📦 Installation des dépendances"
+    - npm ci
+  artifacts:
+    paths:
+      - node_modules/
+    expire_in: 1h
+
+lint:
+  stage: lint
+  script:
+    - echo "🔍 Lint du code"
+    - npx eslint . --ext .js,.jsx || exit 1
+
+build:
+  stage: build
+  script:
+    - echo "⚙️ Build de l’application React"
+    - npm run build
+  artifacts:
+    paths:
+      - build/
+    expire_in: 1h
+
+deploy_ssh:
+  stage: deploy
+  script:
+    - echo "🚀 Déploiement SSH"
+    - mkdir -p ~/.ssh
+    - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+    - ssh -o StrictHostKeyChecking=no -p $SSH_PORT $SSH_USER@$SSH_HOST "mkdir -p $DEPLOY_DIR"
+    - rsync -avz -e "ssh -p $SSH_PORT" ./build/ $SSH_USER@$SSH_HOST:$DEPLOY_DIR/
+  environment:
+    name: production
+    url: https://$SSH_HOST
+  rules:
+    - if: '$DEPLOY_TYPE == "ssh" && $CI_COMMIT_BRANCH == "main"'
+
+deploy_gh_pages:
+  stage: deploy
+  script:
+    - echo "🌍 Initialisation de l'environnement"
+    - echo "🚀 Déploiement GitHub Pages"
+    # Configure Git user identity
+    - git config --global user.email "coupec.legrand@outlook.com"
+    - git config --global user.name "legrandBenjo"
+    - git remote set-url origin https://legrandBenjo:${GH_TOKEN}@github.com/legrandBenjo/nufi-calendar-pdf-generator.git
+    # Then run your deployment
+    - npm run deploy
+  environment:
+    name: gh-pages
+    url: https://$DEPLOY_HOST$DEPLOY_PATH
+  rules:
+    - if: '$DEPLOY_TYPE == "gh-pages" && $CI_COMMIT_BRANCH == "main"'
