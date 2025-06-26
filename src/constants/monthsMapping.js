@@ -1,16 +1,16 @@
 export const MONTHS_MAPPING = {
     nufi: {
-      'January': 'Ngù\'fī',
-      'February': 'Nkùɑ̀nʉ̀ɑ̀',
-      'March': 'Mbàkngòfāt',
-      'April': 'Sò\'njɑ̀ɑ̀',
-      'May': 'Njwēnɑ̌hntà\'',
-      'June': 'Mòmòshʉ̄',
-      'July': 'Ntūmbhìngòfāt',
-      'August': 'Mɑ̄ngà\'nshì',
-      'September': 'Kùkū\'',
-      'October': 'Ndǔ\'nzɑ̄',
-      'November': 'Nkhʉ̀ɑ̀nʉ̀ɑ̀',
+     'January': 'Ngu\'fī',
+      'February': 'Nkuɑnʉɑ',
+      'March': 'Mbakngofāt',
+      'April': 'So\'njɑɑ',
+      'May': 'Njwēnɑ̌hnta\'',
+      'June': 'Momoshʉ̄',
+      'July': 'Ntūmbhingofāt',
+      'August': 'Mɑ̄nga\'nshi',
+      'September': 'Kukū\'',
+      'October': 'Ndʉ̌\'nzɑ̄',
+      'November': 'Nkhʉɑnʉɑ',
       'December': 'Ncátmɑ̄ŋū'
     },
     ghomala: {
