@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import './utils/fontSetup';
 import { PDFDownloadLink } from '@react-pdf/renderer';
-import CalendarPDF from '../src/components/PDF/CalendarPDF';
+import CalendarPDF from './components/PDF/CalendarPDF';
 import YearSelector from './components/YearSelector';
+import DateNavigator from './components/DateNavigator';
 import { parseCSVData } from './utils/csvParser';
-import { isCurrentDayScreen } from './utils/dateUtils'; 
+import registerFonts from './utils/fontSetup';
 import './App.css';
 
 // Constantes pour les types de calendrier
@@ -24,15 +24,31 @@ function App() {
   const [calendarType, setCalendarType] = useState(CALENDAR_TYPES.NUFI);
   const [selectedYear, setSelectedYear] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [useDefaultFile, setUseDefaultFile] = useState(true);
   const [error, setError] = useState(null);
-  const [todayDate, setTodayDate] = useState(null);
+  const [currentDisplayDate, setCurrentDisplayDate] = useState(new Date());
   const currentYear = new Date().getFullYear().toString();
 
+  // Enregistrement des polices
+  useEffect(() => {
+    registerFonts();
+  }, []);
+
   // Traitement des données CSV
-    const processCSVData = useCallback((csvText, type) => {
+  // Dans la fonction processCSVData
+  const processCSVData = useCallback((csvText, type) => {
     try {
       const parsedData = parseCSVData(csvText, type);
+      
+        // Debug: vérifiez la structure des données
+        /*console.log("Vérification des dates:", {
+          dateActuelle: new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
+          premiereDateCSV: parsedData[0]?.date,
+          derniereDateCSV: parsedData[parsedData.length - 1]?.date,
+          exempleDateTrouvee: parsedData.find(item => 
+          item.date === new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
+        )
+      });*/
+      
       setCalendarData(parsedData);
       setError(null);
 
@@ -40,14 +56,6 @@ function App() {
         const years = [...new Set(parsedData.map(item => item.year))].sort();
         const defaultYear = years.includes(currentYear) ? currentYear : years[years.length - 1];
         setSelectedYear(defaultYear);
-
-        // Recherche de la date actuelle
-        const todayItem = parsedData.find(item => isCurrentDayScreen(item));
-
-        if (todayItem) {
-         // Utilisez fullDateLocal qui contient le format complet
-        setTodayDate(todayItem.fullDateLocal || `${todayItem.dayLocal} ${todayItem.date}, ${todayItem.year}`);
-        }
       }
     } catch (err) {
       console.error("Erreur de traitement du CSV:", err);
@@ -58,8 +66,6 @@ function App() {
 
   // Chargement du CSV par défaut
   const loadDefaultCSV = useCallback(async () => {
-    if (!useDefaultFile) return;
-    
     setIsLoading(true);
     setError(null);
     
@@ -74,21 +80,30 @@ function App() {
     } finally {
       setIsLoading(false);
     }
-  }, [calendarType, useDefaultFile, processCSVData]);
+  }, [calendarType, processCSVData]);
 
-  // Gestion du changement de langue
+  // Navigation entre dates
+  const handleDateChange = (days) => {
+    const newDate = new Date(currentDisplayDate);
+    newDate.setDate(newDate.getDate() + days);
+    setCurrentDisplayDate(newDate);
+  };
+
+  // Changement de langue
   const handleLanguageChange = (e) => {
     setCalendarType(e.target.value);
-    setUseDefaultFile(true);
   };
+
+  // Chargement initial des données
+  useEffect(() => {
+    loadDefaultCSV();
+  }, [calendarType, loadDefaultCSV]);
 
   // Filtrage des données par année sélectionnée
   const filteredData = calendarData.filter(item => item.year === selectedYear);
 
-  // Effet pour charger les données
-  useEffect(() => {
-      loadDefaultCSV();
-  }, [calendarType, useDefaultFile, loadDefaultCSV]);
+  // Filtrage des données pour le navigateur de dates
+  const filteredCalendarData = calendarData.filter(item => item.calendarType === calendarType);
 
   return (
     <div className="app-container">
@@ -108,30 +123,14 @@ function App() {
         </select>
       </div>
 
-      {/* Affichage de la date du jour */}
-      {todayDate ? (
-      <div className="today-date">
-        <div className="gregorian-date">
-          {new Date().toLocaleDateString('fr-FR', { 
-            weekday: 'long', 
-            year: 'numeric', 
-            month: 'long', 
-            day: 'numeric' 
-          })}
-        </div>
-        <div className="native-date">
-          {todayDate}
-        </div>
-      </div>
-      ) : (
-      <div className="today-not-found">
-        {calendarData.length > 0 ? (
-          <>
-            Données disponibles du {calendarData[0].date} au {calendarData[calendarData.length - 1].date}.<br />
-            La date du jour n'est pas incluse.
-          </>
-        ) : null}
-      </div>
+      {/* Navigateur de dates */}
+      {calendarData.length > 0 && (
+        <DateNavigator
+          calendarData={filteredCalendarData}
+          calendarType={calendarType}
+          currentDisplayDate={currentDisplayDate}
+          onDateChange={handleDateChange}
+        />
       )}
 
       {/* Affichage des erreurs */}
@@ -171,10 +170,10 @@ function App() {
           </div>
         </>
       ) : (
-        !error && <p className="no-data-message">Aucune donnée disponible. Veuillez charger un fichier CSV.</p>
+        !error && <p className="no-data-message">Aucune donnée disponible.</p>
       )}
 
-      <div className="copyright">© Resulam {currentYear}</div>
+      <div className="copyright">© Resulam {new Date().getFullYear()}</div>
     </div>
   );
 }

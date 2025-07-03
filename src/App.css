@@ -93,18 +93,48 @@
   text-align: center;
 }
 
-.today-date {
-  margin: 20px 0;
-  padding: 15px;
+/* Styles existants... */
+
+.date-navigation-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 25px 0;
   background: #f5f5f5;
+  padding: 15px;
   border-radius: 8px;
-  border-left: 5px solid #4caf50;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.nav-button {
+  background: #2196F3;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 1.2em;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-button:hover {
+  background: #1565C0;
+}
+
+.selected-date {
+  flex-grow: 1;
+  text-align: center;
+  padding: 0 15px;
 }
 
 .gregorian-date {
   font-size: 1.1em;
   color: #333;
-  margin-bottom: 8px;
+  margin-bottom: 5px;
 }
 
 .native-date {
@@ -113,12 +143,32 @@
   color: #2e7d32;
 }
 
-.today-not-found {
+.date-warning {
+  color: #d32f2f;
+  background-color: #fde8e8;
   padding: 10px;
-  background: #fff3e0;
-  border-left: 4px solid #ff6d00;
-  margin: 15px 0;
-  color: #e65100;
+  border-radius: 4px;
+  margin-top: 10px;
+  text-align: center;
+  border: 1px solid #f5c6cb;
+}
+
+.date-warning small {
+  color: #721c24;
+  font-size: 0.8em;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .date-navigation-container {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .nav-button {
+    width: 100%;
+    border-radius: 4px;
+  }
 }
 
 .copyright {
