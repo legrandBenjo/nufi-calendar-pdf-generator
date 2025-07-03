@@ -171,6 +171,33 @@
   }
 }
 
+
+/* Animation pour les transitions de date */
+.date-navigation-container {
+  transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* Effet de profondeur */
+.date-navigation-container.today {
+  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
+
+/* Style pour le texte "Date non disponible" */
+.native.not-available {
+  color: #d32f2f !important;
+  font-style: italic;
+}
+
+.date-navigation-container.today::before {
+  content: "⭐";
+  margin-right: 10px;
+}
+
+/* Pour moins de contraste */
+.date-navigation-container.past {
+  opacity: 0.8;
+}
+
 .copyright {
   display: flex;
   align-items: center;

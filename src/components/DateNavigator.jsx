@@ -7,7 +7,20 @@ const DateNavigator = ({
   currentDisplayDate, 
   onDateChange 
 }) => {
-  // Fonction optimisée pour trouver la date
+  const isToday = (date) => {
+    const today = new Date();
+    return (
+      date.getDate() === today.getDate() &&
+      date.getMonth() === today.getMonth() &&
+      date.getFullYear() === today.getFullYear()
+    );
+  };
+
+  const isPastDate = (date) => {
+    const today = new Date();
+    return date < today && !isToday(date);
+  };
+
   const findDateData = () => {
     const targetDate = new Date(currentDisplayDate);
     const targetYear = targetDate.getFullYear();
@@ -25,38 +38,23 @@ const DateNavigator = ({
   };
 
   const dateData = findDateData();
-  
-  // Calcul des limites de dates
-  const getBoundaries = () => {
-    if (calendarData.length === 0) return { min: null, max: null };
-    
-    const dates = calendarData.map(item => {
-      const [month, day, year] = item.date.split(' ');
-      return new Date(`${month} ${day}, ${year}`);
-    });
-    
-    return {
-      min: new Date(Math.min(...dates)),
-      max: new Date(Math.max(...dates))
-    };
-  };
-
-  const { min, max } = getBoundaries();
-  const canGoPrev = min && currentDisplayDate > min;
-  const canGoNext = max && currentDisplayDate < max;
+  const dateStatus = isToday(currentDisplayDate) 
+    ? 'today' 
+    : isPastDate(currentDisplayDate) 
+      ? 'past' 
+      : 'future';
 
   return (
-    <div className="date-navigation-container">
+    <div className={`date-navigation-container ${dateStatus}`}>
       <button 
         onClick={() => onDateChange(-1)}
-        className={`nav-button ${!canGoPrev ? 'disabled' : ''}`}
-        disabled={!canGoPrev}
+        className="nav-button"
       >
         ←
       </button>
       
       <div className="date-display">
-        <div className="gregorian-date">
+        <div className="gregorian">
           {currentDisplayDate.toLocaleDateString('fr-FR', { 
             weekday: 'long', 
             year: 'numeric', 
@@ -64,15 +62,17 @@ const DateNavigator = ({
             day: 'numeric' 
           })}
         </div>
-        <div className="native-date">
-          {dateData?.fullDateLocal || `Date non trouvée (${min?.toLocaleDateString()} - ${max?.toLocaleDateString()})`}
+        <div className="native">
+          {dateData?.fullDateLocal || 'Date non disponible'}
         </div>
+        {isToday(currentDisplayDate) && (
+          <div className="date-badge">Aujourd'hui</div>
+        )}
       </div>
       
       <button 
         onClick={() => onDateChange(1)}
-        className={`nav-button ${!canGoNext ? 'disabled' : ''}`}
-        disabled={!canGoNext}
+        className="nav-button"
       >
         →
       </button>
