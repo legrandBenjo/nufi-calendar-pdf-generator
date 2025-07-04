@@ -86,4 +86,5 @@
 
 .date-navigation-container.future .native {
   color: #1565c0; /* Bleu */
+  opacity: 0.8;
 }
