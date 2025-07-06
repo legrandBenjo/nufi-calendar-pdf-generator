@@ -1,0 +1,95 @@
+.date-selector-container {
+  position: relative;
+  margin: 20px 0;
+  padding: 20px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.date-display-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.custom-datepicker {
+  padding: 12px 20px;
+  border: 2px solid #2e7d32;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  text-align: center;
+  cursor: pointer;
+  width: 100%;
+  max-width: 300px;
+  transition: all 0.3s ease;
+  background-color: #f8f8f8;
+}
+
+.custom-datepicker:hover {
+  background-color: #e8f5e9;
+}
+
+.native-date {
+  font-size: 1.3rem;
+  font-weight: bold;
+  padding: 12px 20px;
+  border-radius: 8px;
+  background: #f5f5f5;
+  text-align: center;
+  min-width: 280px;
+  line-height: 1.4;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.native-date.nufi {
+  color: #1b5e20;
+  background-color: #e8f5e9;
+  border-left: 4px solid #2e7d32;
+}
+
+.native-date.ghomala {
+  color: #0d47a1;
+  background-color: #e3f2fd;
+  border-left: 4px solid #1565c0;
+}
+
+.today-badge {
+  background-color: #2e7d32;
+  color: white;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 0.9em;
+  margin-bottom: 12px;
+  display: inline-block;
+  font-weight: 600;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 767px) {
+  .date-selector-container {
+    padding: 15px;
+  }
+  
+  .custom-datepicker {
+    padding: 14px;
+    font-size: 1rem;
+  }
+  
+  .native-date {
+    font-size: 1.1rem;
+    padding: 10px 15px;
+    min-width: 240px;
+  }
+}
+
+.date-not-found {
+  color: #d32f2f;
+  font-style: italic;
+  margin-top: 10px;
+}

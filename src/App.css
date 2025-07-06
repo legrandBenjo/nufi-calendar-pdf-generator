@@ -93,18 +93,7 @@
   text-align: center;
 }
 
-/* Styles existants... */
 
-.date-navigation-container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin: 25px 0;
-  background: #f5f5f5;
-  padding: 15px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
 
 .nav-button {
   background: #2196F3;
@@ -172,30 +161,38 @@
 }
 
 
-/* Animation pour les transitions de date */
-.date-navigation-container {
-  transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+/* Ajouter à App.css */
+.date-selector-container {
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
-/* Effet de profondeur */
-.date-navigation-container.today {
-  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+.native-date {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 1.2rem;
+  animation: fadeIn 0.5s ease;
 }
 
-/* Style pour le texte "Date non disponible" */
-.native.not-available {
-  color: #d32f2f !important;
-  font-style: italic;
+.native-date.nufi {
+  color: #2e7d32;
+  border-left: 4px solid #2e7d32;
 }
 
-.date-navigation-container.today::before {
-  content: "⭐";
-  margin-right: 10px;
+.native-date.ghomala {
+  color: #1565c0;
+  border-left: 4px solid #1565c0;
 }
 
-/* Pour moins de contraste */
-.date-navigation-container.past {
-  opacity: 0.6;
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .copyright {

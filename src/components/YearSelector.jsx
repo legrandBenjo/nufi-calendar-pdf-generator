@@ -3,7 +3,7 @@ import React from 'react';
 const YearSelector = ({ years, selectedYear, onSelectYear }) => {
   return (
     <div className="year-selector">
-      <label htmlFor="year-select">Sélectionnez une année pour générer le calendrie: </label>
+      <label htmlFor="year-select">Sélectionnez une année dans la liste ci-dessous pour générer le calendrie: </label>
       <select
         id="year-select"
         value={selectedYear}

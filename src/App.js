@@ -1,26 +1,33 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import CalendarPDF from './components/PDF/CalendarPDF';
 import YearSelector from './components/YearSelector';
-import DateNavigator from './components/DateNavigator';
 import { parseCSVData } from './utils/csvParser';
 import registerFonts from './utils/fontSetup';
+import DateSelector from './components/DateSelector';
+import { registerLocale } from "react-datepicker";
+import fr from 'date-fns/locale/fr';
 import './App.css';
 
-// Constantes pour les types de calendrier
+registerLocale('fr', fr);
+
 const CALENDAR_TYPES = {
   NUFI: 'nufi',
   GHOMALA: 'ghomala'
 };
 
-// Chemins vers les fichiers CSV
 const CSV_PATHS = {
   [CALENDAR_TYPES.NUFI]: process.env.PUBLIC_URL + '/data/Nufi_calendar_calendrier_history_1900_2200.csv',
   [CALENDAR_TYPES.GHOMALA]: process.env.PUBLIC_URL + '/data/Ghomala_calendar_calendrier_history_1900_2200.csv'
 };
 
+// Composants mémoïsés
+const MemoizedDateSelector = React.memo(DateSelector);
+const MemoizedYearSelector = React.memo(YearSelector);
+
 function App() {
   const [calendarData, setCalendarData] = useState([]);
+  const [dataCache, setDataCache] = useState({});
   const [calendarType, setCalendarType] = useState(CALENDAR_TYPES.NUFI);
   const [selectedYear, setSelectedYear] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -28,43 +35,26 @@ function App() {
   const [currentDisplayDate, setCurrentDisplayDate] = useState(new Date());
   const currentYear = new Date().getFullYear().toString();
 
-  // Enregistrement des polices
   useEffect(() => {
     registerFonts();
   }, []);
 
-  // Traitement des données CSV
-  // Dans la fonction processCSVData
   const processCSVData = useCallback((csvText, type) => {
     try {
-      const parsedData = parseCSVData(csvText, type);
-      
-        // Debug: vérifiez la structure des données
-        /*console.log("Vérification des dates:", {
-          dateActuelle: new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
-          premiereDateCSV: parsedData[0]?.date,
-          derniereDateCSV: parsedData[parsedData.length - 1]?.date,
-          exempleDateTrouvee: parsedData.find(item => 
-          item.date === new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
-        )
-      });*/
-      
-      setCalendarData(parsedData);
-      setError(null);
-
-      if (parsedData.length > 0) {
-        const years = [...new Set(parsedData.map(item => item.year))].sort();
-        const defaultYear = years.includes(currentYear) ? currentYear : years[years.length - 1];
-        setSelectedYear(defaultYear);
+      const cacheKey = `${type}_${csvText.length}`;
+      if (dataCache[cacheKey]) {
+        return dataCache[cacheKey];
       }
+      
+      const parsedData = parseCSVData(csvText, type);
+      setDataCache(prev => ({...prev, [cacheKey]: parsedData}));
+      return parsedData;
     } catch (err) {
       console.error("Erreur de traitement du CSV:", err);
-      setError("Erreur lors du traitement du fichier CSV.");
-      setCalendarData([]);
+      throw err;
     }
-  }, [currentYear]);
+  }, [dataCache]);
 
-  // Chargement du CSV par défaut
   const loadDefaultCSV = useCallback(async () => {
     setIsLoading(true);
     setError(null);
@@ -73,43 +63,57 @@ function App() {
       const response = await fetch(CSV_PATHS[calendarType]);
       if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
       const csvText = await response.text();
-      processCSVData(csvText, calendarType);
+      const parsedData = processCSVData(csvText, calendarType);
+      setCalendarData(parsedData);
+
+      if (parsedData.length > 0) {
+        const years = [...new Set(parsedData.map(item => item.year))].sort();
+        const defaultYear = years.includes(currentYear) ? currentYear : years[years.length - 1];
+        setSelectedYear(defaultYear);
+      }
     } catch (err) {
       console.error("Erreur de chargement du CSV:", err);
       setError(`Erreur de chargement du fichier ${calendarType} par défaut`);
     } finally {
       setIsLoading(false);
     }
-  }, [calendarType, processCSVData]);
+  }, [calendarType, processCSVData, currentYear]);
 
-  // Navigation entre dates
-  const handleDateChange = (days) => {
-    const newDate = new Date(currentDisplayDate);
-    newDate.setDate(newDate.getDate() + days);
-    setCurrentDisplayDate(newDate);
-  };
-
-  // Changement de langue
   const handleLanguageChange = (e) => {
     setCalendarType(e.target.value);
   };
 
-  // Chargement initial des données
   useEffect(() => {
     loadDefaultCSV();
   }, [calendarType, loadDefaultCSV]);
 
-  // Filtrage des données par année sélectionnée
-  const filteredData = calendarData.filter(item => item.year === selectedYear);
+  // Données filtrées mémoïsées
+  const filteredData = useMemo(() => (
+    calendarData.filter(item => item.year === selectedYear)
+  ), [calendarData, selectedYear]);
 
-  // Filtrage des données pour le navigateur de dates
-  const filteredCalendarData = calendarData.filter(item => item.calendarType === calendarType);
+  // PDF mémoïsé
+  const pdfDocument = useMemo(() => (
+    <CalendarPDF data={filteredData} />
+  ), [filteredData]);
+
+  // Limites de dates mémoïsées
+  const { minDate, maxDate } = useMemo(() => {
+    if (calendarData.length === 0) return { minDate: null, maxDate: null };
+    
+    const firstItem = calendarData[0];
+    const lastItem = calendarData[calendarData.length - 1];
+    
+    const minDate = new Date(firstItem.date.split(' ')[2], 0, 1);
+    const maxDate = new Date(lastItem.date.split(' ')[2], 11, 31);
+    
+    return { minDate, maxDate };
+  }, [calendarData]);
 
   return (
     <div className="app-container">
       <h1 className="app-title">Générateur de Calendrier en PDF</h1>
       
-      {/* Sélecteur de langue */}
       <div className="control-group">
         <label className="control-label">Sélectionner la langue dans la liste ci-dessous:</label>
         <select 
@@ -123,51 +127,46 @@ function App() {
         </select>
       </div>
 
-      {/* Navigateur de dates */}
       {calendarData.length > 0 && (
-        <DateNavigator
-          calendarData={filteredCalendarData}
+        <MemoizedDateSelector
+          selectedDate={currentDisplayDate}
+          onChange={setCurrentDisplayDate}
+          minDate={minDate}
+          maxDate={maxDate}
           calendarType={calendarType}
-          currentDisplayDate={currentDisplayDate}
-          onDateChange={handleDateChange}
+          calendarData={calendarData}
         />
       )}
 
-      {/* Affichage des erreurs */}
-      {error && (
-        <div className="error-message">
-          {error}
-        </div>
-      )}
+      {error && <div className="error-message">{error}</div>}
 
-      {/* Contenu principal */}
       {isLoading ? (
         <div className="loading-indicator">Chargement en cours...</div>
       ) : calendarData.length > 0 ? (
         <>
-          <YearSelector
+          <MemoizedYearSelector
             years={[...new Set(calendarData.map(item => item.year))].sort()}
             selectedYear={selectedYear}
             onSelectYear={setSelectedYear}
           />
 
           <div style={{ marginTop: 20 }}>
-            <PDFDownloadLink
-              document={<CalendarPDF data={filteredData} />}
-              fileName={`calendrier_${calendarType}_${selectedYear}.pdf`}
-              style={{
-                padding: '10px 15px',
-                background: '#2196F3',
-                color: 'white',
-                textDecoration: 'none',
-                borderRadius: 4,
-                display: 'inline-block',
-                marginTop: 10
-              }}
-            >
-              {({ loading }) => loading ? 'Préparation...' : 'Télécharger le calendrier en PDF'}
-            </PDFDownloadLink>
-          </div>
+          <PDFDownloadLink
+            document={pdfDocument}
+            fileName={`calendrier_${calendarType}_${selectedYear}.pdf`}
+            style={{
+              padding: '10px 15px',
+              background: '#2196F3',
+              color: 'white',
+              textDecoration: 'none',
+              borderRadius: 4,
+              display: 'inline-block',
+              marginTop: 10
+            }}
+          >
+            {({ loading }) => loading ? 'Préparation...' : `Télécharger le calendrier ${selectedYear} en PDF`}
+          </PDFDownloadLink>
+        </div>
         </>
       ) : (
         !error && <p className="no-data-message">Aucune donnée disponible.</p>
