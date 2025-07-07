@@ -21,3 +21,11 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+android/.idea/runConfigurations.xml
+android/.idea/misc.xml
+android/.idea/AndroidProjectSystem.xml
+android/.idea/appInsightsSettings.xml
+android/.idea/compiler.xml
+android/.idea/deploymentTargetSelector.xml
+android/.idea/migrations.xml
+android/.idea/.gitignore
