@@ -3,9 +3,7 @@ import { pdf, PDFDownloadLink } from '@react-pdf/renderer';
 import { Filesystem, Directory } from '@capacitor/filesystem';
 import { Capacitor } from '@capacitor/core';
 import CalendarPDF from './PDF/CalendarPDF';
-
 import { FileOpener } from '@awesome-cordova-plugins/file-opener';
-import { File } from '@awesome-cordova-plugins/file';
 
 function PDFDownloader({ data, calendarType, selectedYear }) {
   const isNative = Capacitor.isNativePlatform();

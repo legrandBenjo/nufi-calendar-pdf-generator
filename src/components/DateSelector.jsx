@@ -4,13 +4,15 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { registerLocale } from 'react-datepicker';
 import fr from 'date-fns/locale/fr';
 import '../DateSelector.css';
+import {monthsFr} from '../constants/monthsFr'
 
 registerLocale('fr', fr);
 
 const isToday = (date) => {
-  if (!date || isNaN(date.getTime())) return false;
   const today = new Date();
   return (
+    date &&
+    !isNaN(date) &&
     date.getDate() === today.getDate() &&
     date.getMonth() === today.getMonth() &&
     date.getFullYear() === today.getFullYear()
@@ -18,81 +20,126 @@ const isToday = (date) => {
 };
 
 const DateSelector = ({ selectedDate, onChange, minDate, maxDate, calendarType, calendarData }) => {
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [localDate, setLocalDate] = useState(null);
+  const [pickerValue, setPickerValue] = useState({ day: '1', month: '1', year: '2023' });
 
-  // Utilisation de useCallback pour mémoïser la fonction
-  const findLocalDate = useCallback((date) => {
-    if (!date || !calendarData?.length) return null;
-    
-    const day = date.getDate();
-    const month = date.toLocaleString('en-US', { month: 'long' });
-    const year = date.getFullYear();
-    const searchStr = `${month} ${day} ${year}`;
-    
-    const foundItem = calendarData.find(item => item.date === searchStr);
-    return foundItem?.fullDateLocal || null;
-  }, [calendarData]); // Dépendance nécessaire
-
-  // Gère le responsive
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
-    handleResize();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Met à jour la date locale
+  const findLocalDate = useCallback((date) => {
+    if (!date || !calendarData?.length) return null;
+    const day = date.getDate();
+    const month = date.toLocaleString('en-US', { month: 'long' });
+    const year = date.getFullYear();
+    const key = `${month} ${day} ${year}`;
+    return calendarData.find(item => item.date === key)?.fullDateLocal || null;
+  }, [calendarData]);
+
   useEffect(() => {
-    if (selectedDate) {
-      const newLocalDate = findLocalDate(selectedDate);
-      setLocalDate(newLocalDate);
+    if (!selectedDate || isNaN(selectedDate)) return;
+    setPickerValue({
+      day: selectedDate.getDate().toString(),
+      month: (selectedDate.getMonth() + 1).toString(),
+      year: selectedDate.getFullYear().toString(),
+    });
+    setLocalDate(findLocalDate(selectedDate));
+  }, [selectedDate, findLocalDate]);
+
+  const getDaysInMonth = (year, month) => new Date(year, month, 0).getDate();
+
+  const optionGroups = useMemo(() => {
+    const year = parseInt(pickerValue.year) || new Date().getFullYear();
+    const month = parseInt(pickerValue.month) || 1;
+    const daysInMonth = getDaysInMonth(year, month);
+    return {
+      day: Array.from({ length: daysInMonth }, (_, i) => (i + 1).toString()),
+      month: monthsFr,
+      year: Array.from({ length: 201 }, (_, i) => (1900 + i).toString()),
+    };
+  }, [pickerValue]);
+
+  const handlePickerChange = (name, value) => {
+    const updated = { ...pickerValue, [name]: value };
+    setPickerValue(updated);
+    const year = parseInt(updated.year);
+    const month = parseInt(updated.month) - 1;
+    const day = parseInt(updated.day);
+    const newDate = new Date(year, month, day);
+    if (!isNaN(newDate.getTime()) && newDate.getDate() === day) {
+      onChange(newDate);
     }
-  }, [selectedDate, findLocalDate]); // Maintenant findLocalDate est stable grâce à useCallback
+  };
 
-  const dateFormat = useMemo(() => 
-    isMobile ? "dd/MM/yyyy" : "dd MMMM yyyy",
-    [isMobile]
-  );
+  const dateFormat = useMemo(() => (isMobile ? 'dd/MM/yyyy' : 'dd MMMM yyyy'), [isMobile]);
 
-  if (!selectedDate || isNaN(selectedDate.getTime())) {
+  if (!selectedDate || isNaN(selectedDate)) {
     return <div className="date-selector-container">Date invalide</div>;
   }
 
   return (
     <div className="date-selector-container">
-      {isToday(selectedDate) && (
-        <div className="today-badge">Aujourd'hui</div>
-      )}
-      
+      {isToday(selectedDate) && <div className="today-badge">Aujourd'hui</div>}
+
       <div className="date-display-wrapper">
-        <DatePicker
-          selected={selectedDate}
-          onChange={onChange}
-          minDate={minDate}
-          maxDate={maxDate}
-          dateFormat={dateFormat}
-          showMonthDropdown
-          showYearDropdown
-          dropdownMode="select"
-          locale="fr"
-          className="custom-datepicker"
-          calendarClassName="custom-calendar"
-          popperPlacement={isMobile ? "auto" : "bottom"}
-          useWeekdaysShort={true}
-          shouldCloseOnSelect={true}
-          withPortal={isMobile}
-        />
-        
-        {localDate ? (
-          <div className={`native-date ${calendarType}`}>
-            {localDate}
-          </div>
-        ) : (
-          <div className="date-not-found">
-            Date non trouvée dans les données
-          </div>
+        {isMobile ? (
+            <div className="mobile-select-wrapper">
+              <select
+                aria-label="Jour"
+                value={pickerValue.day}
+                onChange={e => handlePickerChange('day', e.target.value)}
+              >
+                {optionGroups.day.map(day => (
+                  <option key={day} value={day}>{day}</option>
+                ))}
+              </select>
+
+              <select
+                aria-label="Mois"
+                value={pickerValue.month}
+                onChange={e => handlePickerChange('month', e.target.value)}
+              >
+                {optionGroups.month.map(({ value, label }) => (
+                  <option key={value} value={value}>{label}</option>
+                ))}
+
+              </select>
+
+              <select
+                aria-label="Année"
+                value={pickerValue.year}
+                onChange={e => handlePickerChange('year', e.target.value)}
+              >
+                {optionGroups.year.map(year => (
+                  <option key={year} value={year}>{year}</option>
+                ))}
+              </select>
+            </div>
+          ) : (
+          <DatePicker
+            selected={selectedDate}
+            onChange={onChange}
+            minDate={minDate}
+            maxDate={maxDate}
+            dateFormat={dateFormat}
+            showMonthDropdown
+            showYearDropdown
+            dropdownMode="select"
+            locale="fr"
+            className="custom-datepicker"
+            calendarClassName="custom-calendar"
+            popperPlacement="bottom"
+            useWeekdaysShort
+            shouldCloseOnSelect
+          />
         )}
+
+        <div className={localDate ? `native-date ${calendarType}` : 'date-not-found'}>
+          {localDate || 'Date non trouvée dans les données'}
+        </div>
       </div>
     </div>
   );
