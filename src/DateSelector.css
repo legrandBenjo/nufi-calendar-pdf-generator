@@ -164,3 +164,14 @@
   padding: 6px;
   border-radius: 8px;
 }
+
+.native-date-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.alternate-label {
+  font-size: 0.9em;
+  color: #666;
+}

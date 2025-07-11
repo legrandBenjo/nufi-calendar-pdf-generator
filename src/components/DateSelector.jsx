@@ -4,7 +4,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { registerLocale } from 'react-datepicker';
 import fr from 'date-fns/locale/fr';
 import '../DateSelector.css';
-import {monthsFr} from '../constants/monthsFr'
+import { monthsFr } from '../constants/monthsFr';
 
 registerLocale('fr', fr);
 
@@ -80,45 +80,55 @@ const DateSelector = ({ selectedDate, onChange, minDate, maxDate, calendarType, 
     return <div className="date-selector-container">Date invalide</div>;
   }
 
+  // 💡 Ajouter une logique pour vérifier si la date locale est un jour avec alternative
+  let decoratedDate = localDate;
+  let altLabel = null;
+  if (localDate?.includes("Nthʉ̂'ntāā")) {
+    decoratedDate = `*${localDate}`;
+    altLabel = "Nthʉ̄'ntāā = Líé'ngā'";
+  } else if (localDate?.includes("Nshwīe'ko")) {
+    decoratedDate = `*${localDate}`;
+    altLabel = "Nshwīē'ko = Nzêngoo";
+  }
+
   return (
     <div className="date-selector-container">
       {isToday(selectedDate) && <div className="today-badge">Aujourd'hui</div>}
 
       <div className="date-display-wrapper">
         {isMobile ? (
-            <div className="mobile-select-wrapper">
-              <select
-                aria-label="Jour"
-                value={pickerValue.day}
-                onChange={e => handlePickerChange('day', e.target.value)}
-              >
-                {optionGroups.day.map(day => (
-                  <option key={day} value={day}>{day}</option>
-                ))}
-              </select>
+          <div className="mobile-select-wrapper">
+            <select
+              aria-label="Jour"
+              value={pickerValue.day}
+              onChange={e => handlePickerChange('day', e.target.value)}
+            >
+              {optionGroups.day.map(day => (
+                <option key={day} value={day}>{day}</option>
+              ))}
+            </select>
 
-              <select
-                aria-label="Mois"
-                value={pickerValue.month}
-                onChange={e => handlePickerChange('month', e.target.value)}
-              >
-                {optionGroups.month.map(({ value, label }) => (
-                  <option key={value} value={value}>{label}</option>
-                ))}
+            <select
+              aria-label="Mois"
+              value={pickerValue.month}
+              onChange={e => handlePickerChange('month', e.target.value)}
+            >
+              {optionGroups.month.map(({ value, label }) => (
+                <option key={value} value={value}>{label}</option>
+              ))}
+            </select>
 
-              </select>
-
-              <select
-                aria-label="Année"
-                value={pickerValue.year}
-                onChange={e => handlePickerChange('year', e.target.value)}
-              >
-                {optionGroups.year.map(year => (
-                  <option key={year} value={year}>{year}</option>
-                ))}
-              </select>
-            </div>
-          ) : (
+            <select
+              aria-label="Année"
+              value={pickerValue.year}
+              onChange={e => handlePickerChange('year', e.target.value)}
+            >
+              {optionGroups.year.map(year => (
+                <option key={year} value={year}>{year}</option>
+              ))}
+            </select>
+          </div>
+        ) : (
           <DatePicker
             selected={selectedDate}
             onChange={onChange}
@@ -137,8 +147,15 @@ const DateSelector = ({ selectedDate, onChange, minDate, maxDate, calendarType, 
           />
         )}
 
-        <div className={localDate ? `native-date ${calendarType}` : 'date-not-found'}>
-          {localDate || 'Date non trouvée dans les données'}
+        <div className="native-date-wrapper">
+          <div className={localDate ? `native-date ${calendarType}` : 'date-not-found'}>
+            {decoratedDate || 'Date non trouvée dans les données'}
+          </div>
+          {altLabel && (
+            <div className="alternate-label">
+              <em>{altLabel}</em>
+            </div>
+          )}
         </div>
       </div>
     </div>
