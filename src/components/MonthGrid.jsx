@@ -1,6 +1,6 @@
 import { View, Text } from '@react-pdf/renderer';
 import DayCell from './DayCell';
-import { MONTHS_MAPPING } from '../constants/monthsMapping';
+import { getMonthLabel } from '../utils/getMonthLabel';
 import { getFirstDayOffset } from '../utils/dateUtils';
 import { styles } from '../constants/styles';
 
@@ -10,7 +10,7 @@ const MonthGrid = ({ month, monthData, currentYear, calendarType }) => {
   return (
     <View style={styles.monthContainer}>
       <Text style={styles.monthHeader}>
-        {MONTHS_MAPPING[calendarType][month] || month}
+        {getMonthLabel(month, calendarType)}
       </Text>
       <Text style={styles.monthSubtitle}>
         {currentYear}
