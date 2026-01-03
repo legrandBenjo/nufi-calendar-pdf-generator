@@ -6,7 +6,7 @@ import { styles } from '../constants/styles';
 const CalendarPage = ({ data }) => {
   const currentYear = data[0]?.year || '';
   const calendarType = data[0]?.calendarType || 'nufi';
-  
+
   // Organiser les données par mois (optimisé)
   const monthsData = data.reduce((acc, item) => {
     const month = item.date.split(' ')[0];
@@ -24,31 +24,31 @@ const CalendarPage = ({ data }) => {
 
   return (
     <>
-      {/* Première page avec informations */}
+      {/* Première page avec informations - Toujours en A4 */}
       <Page size="A4" style={styles.page}>
         <View style={styles.firstPageContainer}>
-          <Image 
-            src={`${process.env.PUBLIC_URL}/logo512.png`} 
+          <Image
+            src={`${process.env.PUBLIC_URL}/logo512.png`}
             style={styles.logo}
             alt="Logo Resulam"
           />
-          
+
           <View>
             <Text style={styles.yearTitle}>
               Calendrier {calendarType.toUpperCase()} {currentYear}
             </Text>
           </View>
-          
+
           {/* Section À propos améliorée */}
           <View style={styles.aboutSection}>
             <Text style={styles.aboutTitle}>{aboutContent.title}</Text>
-            
+
             {aboutContent.paragraphs.map((paragraph, index) => (
               <Text key={`para-${index}`} style={styles.aboutText}>
                 {paragraph}
               </Text>
             ))}
-            
+
             <View style={styles.linksContainer}>
               {/* Section GitHub améliorée */}
               <View style={styles.linkBlock}>
@@ -65,12 +65,12 @@ const CalendarPage = ({ data }) => {
                   </View>
                 ))}
               </View>
-              
+
               {/* Section Contact */}
               <View style={styles.linkBlock}>
                 <Text style={styles.linkText}>{aboutContent.links.contact.text}</Text>
-                <Link 
-                  src={`mailto:${aboutContent.links.contact.email}`} 
+                <Link
+                  src={`mailto:${aboutContent.links.contact.email}`}
                   style={styles.link}
                 >
                   {aboutContent.links.contact.email}
@@ -85,17 +85,29 @@ const CalendarPage = ({ data }) => {
         </View>
       </Page>
 
-      {/* Pages des mois */}
-      {Object.entries(monthsData).map(([month, monthData]) => (
-        <Page key={`month-${month}`} size="A4" style={styles.page}>
-          <MonthGrid 
-            month={month} 
-            monthData={monthData} 
-            currentYear={currentYear}
-            calendarType={calendarType}
-          />
-        </Page>
-      ))}
+      {/* Deuxième page avec tous les mois - Format A3 Paysage */}
+      <Page size="A3" orientation="landscape" style={styles.pageA3}>
+        <Text style={[styles.yearTitle, { fontSize: 18, marginBottom: 10 }]}>
+          Calendrier {calendarType.toUpperCase()} {currentYear}
+        </Text>
+
+        <View style={styles.monthsGrid}>
+          {Object.entries(monthsData).map(([month, monthData]) => (
+            <MonthGrid
+              key={`month-${month}`}
+              month={month}
+              monthData={monthData}
+              currentYear={currentYear}
+              calendarType={calendarType}
+              isA3={true}
+            />
+          ))}
+        </View>
+
+        <Text style={[styles.signature, { marginTop: 'auto', paddingRight: 20 }]}>
+          © Resulam - Généré le {generationDate}
+        </Text>
+      </Page>
     </>
   );
 };

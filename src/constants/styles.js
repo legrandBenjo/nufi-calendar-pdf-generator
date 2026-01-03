@@ -9,6 +9,11 @@ export const styles = StyleSheet.create({
     padding: 40,
     backgroundColor: '#ffffff'
   },
+  pageA3: {
+    padding: 20,
+    backgroundColor: '#ffffff',
+    flexDirection: 'column',
+  },
   yearTitle: {
     fontSize: 24,
     fontWeight: 'bold',
@@ -60,9 +65,13 @@ export const styles = StyleSheet.create({
     padding: 5,
     borderRight: `1pt solid ${COLORS.light}`,
     borderBottom: `1pt solid ${COLORS.light}`,
-    ':nth-child(7n)': {
-      borderRight: 'none'
-    }
+  },
+  dayCellA3: {
+    width: '14.28%',
+    height: 25,
+    padding: 2,
+    borderRight: `1pt solid ${COLORS.light}`,
+    borderBottom: `1pt solid ${COLORS.light}`,
   },
   dayContent: {
     display: 'flex',
@@ -95,6 +104,60 @@ export const styles = StyleSheet.create({
     width: '14.28%',
     height: 40,
     backgroundColor: '#fdfdfd'
+  },
+  emptyCellA3: {
+    width: '14.28%',
+    height: 25,
+    backgroundColor: '#fdfdfd'
+  },
+  monthsGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    padding: 10,
+  },
+  monthContainerA3: {
+    width: '24%', // 4 columns
+    marginBottom: 15,
+    border: `1pt solid ${COLORS.light}`,
+    borderRadius: 4,
+    overflow: 'hidden',
+  },
+  monthHeaderA3: {
+    backgroundColor: COLORS.primary,
+    color: 'white',
+    padding: 4,
+    textAlign: 'center',
+    fontWeight: 'bold',
+    fontSize: 10
+  },
+  dayHeaderA3: {
+    width: '14.28%',
+    padding: 4,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    backgroundColor: COLORS.secondary,
+    color: 'white',
+    fontSize: 8,
+    borderRight: `1pt solid ${COLORS.light}`,
+    borderBottom: `1pt solid ${COLORS.light}`,
+  },
+  dayNumberA3: {
+    fontWeight: 'bold',
+    color: COLORS.dark,
+    fontSize: 9
+  },
+  dayNameA3: {
+    fontSize: 7,
+    color: COLORS.text,
+    textAlign: 'center'
+  },
+  monthSubtitleA3: {
+    textAlign: 'center',
+    color: COLORS.text,
+    fontSize: 8,
+    marginTop: 2,
+    marginBottom: 2
   },
   monthSubtitle: {
     textAlign: 'center',

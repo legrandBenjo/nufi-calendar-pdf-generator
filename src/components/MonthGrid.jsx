@@ -4,34 +4,35 @@ import { getMonthLabel } from '../utils/getMonthLabel';
 import { getFirstDayOffset } from '../utils/dateUtils';
 import { styles } from '../constants/styles';
 
-const MonthGrid = ({ month, monthData, currentYear, calendarType }) => {
+const MonthGrid = ({ month, monthData, currentYear, calendarType, isA3 }) => {
   const firstDayOffset = getFirstDayOffset(monthData);
-  
+
   return (
-    <View style={styles.monthContainer}>
-      <Text style={styles.monthHeader}>
+    <View style={isA3 ? styles.monthContainerA3 : styles.monthContainer}>
+      <Text style={isA3 ? styles.monthHeaderA3 : styles.monthHeader}>
         {getMonthLabel(month, calendarType)}
       </Text>
-      <Text style={styles.monthSubtitle}>
+      <Text style={isA3 ? styles.monthSubtitleA3 : styles.monthSubtitle}>
         {currentYear}
       </Text>
-      
+
       <View style={styles.grid}>
         {['D', 'L', 'M', 'M', 'J', 'V', 'S'].map((day, i) => (
-          <Text key={i} style={styles.dayHeader}>{day}</Text>
+          <Text key={i} style={isA3 ? styles.dayHeaderA3 : styles.dayHeader}>{day}</Text>
         ))}
       </View>
-      
+
       <View style={styles.grid}>
         {Array.from({ length: firstDayOffset }).map((_, i) => (
-          <View key={`empty-${i}`} style={styles.emptyCell} />
+          <View key={`empty-${i}`} style={isA3 ? styles.emptyCellA3 : styles.emptyCell} />
         ))}
-        
+
         {monthData.map((day, i) => (
-          <DayCell 
-            key={i} 
-            day={day} 
-            currentYear={currentYear} 
+          <DayCell
+            key={i}
+            day={day}
+            currentYear={currentYear}
+            isA3={isA3}
           />
         ))}
       </View>
