@@ -29,3 +29,6 @@ android/.idea/compiler.xml
 android/.idea/deploymentTargetSelector.xml
 android/.idea/migrations.xml
 android/.idea/.gitignore
+android/app/release/baselineProfiles/0/app-release.dm
+android/app/release/baselineProfiles/1/app-release.dm
+.vscode/settings.json
