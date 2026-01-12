@@ -40,4 +40,10 @@ Une fois que vous avez un calendrier sous format CSV, vous pouvez maintenant uti
 Pour celà, repartir du point 1 ci-dessus et adapter le code en conséquence.
 Le fichier comportant le calendrier en CSV doit être présent dans le dossier public/data.
 
+# Comment lancer démarrer le projet Android pour générer l'APK
+1. exécuter la commande suivante: `npm run build`
+2. ensuite, exécuter la commande suivante: `npx cap copy`
+3. ensuite, exécuter la commande suivante: `npx cap open android`
+Cette dernière commande va ouvrir Android Studio où vous pourrez compiler l'APK.
+
 **Note: N'hésitez pas à contacter Resulam pour du support à l'adresse suivante: contact@resulam.com**
